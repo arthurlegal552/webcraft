@@ -51,7 +51,7 @@
     cube.castShadow = true
     
     const planeGeometry = new THREE.PlaneGeometry(30, 30)
-    const planeMaterial = new THREE.MeshBasicMaterial({
+    const planeMaterial = new THREE.MeshStandardMaterial({
       color: 0XFFFFFF,
     side: THREE.DoubleSide
     });
@@ -61,6 +61,7 @@
     plane.receiveShadow = true;    
     const gridHelper = new THREE.GridHelper(30);
     scene.add(gridHelper);
+    plane.castShadow = true
     
     const sphereGeometry = new THREE.SphereGeometry(4, 10, 10);
     const sphereMaterial = new THREE.MeshStandardMaterial({

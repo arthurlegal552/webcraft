@@ -113,12 +113,41 @@
 
     let step = 0;
 
+    // 1. Criar geometria
+const particleGeometry = new THREE.BufferGeometry();
+const particleCount = 500;
+const positions = [];
+
+for (let i = 0; i < particleCount; i++) {
+  positions.push(
+    (Math.random() - 0.5) * 50,
+    (Math.random() - 0.5) * 50,
+    (Math.random() - 0.5) * 50
+  );
+}
+
+particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+
+// 2. Criar material
+const particleMaterial = new THREE.PointsMaterial({
+  color: 0xffffff,
+  size: 0.3,
+  transparent: true,
+  opacity: 0.8
+});
+
+// 3. Criar sistema de partículas
+const particles = new THREE.Points(particleGeometry, particleMaterial);
+scene.add(particles);
+
+
     // Animação com orbit controls ativos
     function animate() {
       requestAnimationFrame(animate);
       controls.update();
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
+      
 
       step += options.speed;
       sphere.position.y = 10 * Math.abs(Math.sin(step));
@@ -137,6 +166,7 @@ window.addEventListener('click', () => {
 
   if (intersects.length > 0) {
     const objetoAlvo = intersects[0].object;
+    particula.visible = false;
     console.log('Clicou em:', objetoAlvo.name || objetoAlvo);
   }
 });

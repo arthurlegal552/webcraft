@@ -65,7 +65,8 @@
     const sphereGeometry = new THREE.SphereGeometry(4, 10, 10);
     const sphereMaterial = new THREE.MeshStandardMaterial({
       color: 0X0000FF,
-    wireframe: false
+    wireframe: false,
+    map: textureLoader.load('apcat.jpg')
     });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);

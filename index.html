@@ -111,6 +111,10 @@
 
     gui.add(options, 'speed', 0, 0.1);
 
+    gui.add(options, 'particles').onChange(function(e){
+      particles.visible = e;
+    });
+
     let step = 0;
 
     // 1. Criar geometria
@@ -166,7 +170,6 @@ window.addEventListener('click', () => {
 
   if (intersects.length > 0) {
     const objetoAlvo = intersects[0].object;
-    particles.visible = false;
     console.log('Clicou em:', objetoAlvo.name || objetoAlvo);
   }
 });

@@ -33,7 +33,7 @@
     // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
-    renderer.shadowMap.Enabled = true;
+    renderer.shadowMap.enabled = true;
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
@@ -45,9 +45,10 @@
     // Cubo simples
     const cube = new THREE.Mesh(
       new THREE.BoxGeometry(),
-      new THREE.MeshNormalMaterial()
+      new THREE.MeshStandardMaterial()
     );
     scene.add(cube);
+    cube.castShadow = true
     
     const planeGeometry = new THREE.PlaneGeometry(30, 30)
     const planeMaterial = new THREE.MeshBasicMaterial({

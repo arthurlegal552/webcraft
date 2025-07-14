@@ -1,42 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <title>WebCraft Modular</title>
-</head>
-<body>
-    <style>body{margin:0;overflow:hidden;}canvas{display:block;}#ui-overlay{position:absolute;width:100%;height:100%;pointer-events:none;} .screen{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;pointer-events:auto;text-align:center;} .btn{margin:10px;padding:8px 16px;background:#444;color:#fff;border:none;border-radius:3px;cursor:pointer;} .btn:hover{background:#666;} #toolbar{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;} .slot{width:36px;height:36px;border:2px solid #888;background:#ccc;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:bold;} .slot.selected{border-color:gold;} #crosshair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:24px;color:#fff;pointer-events:none;}</style>
-  <div id="ui-overlay">
-    <div id="menuScreen" class="screen"><h1>WebCraft</h1>
-      <button class="btn" id="playBtn">Play</button><br>
-      <button class="btn" id="settingsBtn">Settings</button><br>
-      <button class="btn" id="creditsBtn">Credits</button>
-    </div>
-    <div id="settingsScreen" class="screen"><h2>Settings</h2>
-      <button class="btn" id="settingsBack">Back</button>
-    </div>
-    <div id="creditsScreen" class="screen"><h2>Credits</h2>
-      Created by You<br>
-      <button class="btn" id="creditsBack">Back</button>
-    </div>
-    <div id="toolbar"></div>
-    <div id="crosshair">+</div>
-  </div>
+  <title>Three.js + OrbitControls (simples)</title>
 
+  <!-- Import Map para definir onde buscar os módulos -->
   <script type="importmap">
   {
     "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.module.js",
-      "PointerLockControls": "https://cdn.jsdelivr.net/npm/three@0.153.0/examples/jsm/controls/PointerLockControls.js",
-      "SimplexNoise": "https://cdn.jsdelivr.net/npm/simplex-noise@4.0.1/simplex-noise.js",
-      "main": "./js/main.js"
+      "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/"
+      <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
     }
   }
   </script>
-
+</head>
+<body style="margin:0; overflow:hidden;">
   <script type="module">
-    import { start } from "main";
-    start();
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // Cena e câmera
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.set(3, 3, 5);
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // OrbitControls – agora funciona corretamente
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    // Cubo simples
+    const cube = new THREE.Mesh(
+      new THREE.BoxGeometry(),
+      new THREE.MeshNormalMaterial()
+    );
+    scene.add(cube);
+    
+    const planeGeometry = new THREE.PlaneGeometry(30, 30)
+    const planeMaterial = new THREE.MeshBasicMaterial({
+      color: 0XFFFFFF,
+    side: THREE.DoubleSide
+    });
+    const plane = new THREE.Mesh(planeGeometry, planeMaterial)
+    scene.add(plane);
+    plane.rotation.x = 0.5 * Math.PI    
+    const gridHelper = new THREE.GridHelper(30);
+    scene.add(gridHelper);
+    
+    const sphereGeometry = new THREE.SphereGeometry(4, 10, 10);
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0X0000FF,
+    wireframe: true
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    scene.add(sphere);
+    
+    sphere.position.x = -10;
+
+    const gui = dat.GUI();
+
+    const options = {
+      sphereColor: 'ffea00'
+    }
+
+    gui.addColor(options, "sphereColor").onChange(function(e){
+      sphere.material.color.set(e);
+    });
+
+    // Animação com orbit controls ativos
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Responsivo
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   </script>
 </body>
 </html>

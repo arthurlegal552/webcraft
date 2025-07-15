@@ -175,6 +175,12 @@ scene.add(particles);
     }
     animate();
 
+    window.addEventListener('mousemove', (event) => {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+});
+
+
    let sound; // som global
 
 const listener = new THREE.AudioListener();

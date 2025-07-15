@@ -99,13 +99,14 @@
 
     const assetLoader = new GLTFLoader();
 
-    assetLoader.load(kittyurl.href, function(gltf) {
-      const model = gltf.scene;
-      scene.add(model);
-      model.position.set(-12, 4, 10);
-    }, undefined, function(error){
-      console.error(error)
-    })
+    let kittyModel;
+
+assetLoader.load(kittyurl.href, function(gltf) {
+  kittyModel = gltf.scene;
+  scene.add(kittyModel);
+  kittyModel.position.set(-12, 4, 10);
+});
+
 
     const gui =  new dat.GUI();
 
@@ -174,6 +175,18 @@ scene.add(particles);
     }
     animate();
 
+    const listener = new THREE.AudioListener();
+camera.add(listener); // Ouvinte ligado à câmera
+
+const sound = new THREE.Audio(listener);
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('assets/miau.mp3', function(buffer) {
+  sound.setBuffer(buffer);
+  sound.setLoop(false);
+  sound.setVolume(1.0);
+});
+
+
     window.addEventListener('mousemove', (event) => {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -181,13 +194,17 @@ scene.add(particles);
 
 window.addEventListener('click', () => {
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(scene.children);
+  const intersects = raycaster.intersectObjects(scene.children, true); // true para checar filhos também
 
-  if (intersects.length > 0) {
-    const objetoAlvo = intersects[0].object;
-    console.log('Clicou em:', objetoAlvo.name || objetoAlvo);
+  for (const hit of intersects) {
+    if (kittyModel && kittyModel.children.includes(hit.object)) {
+      sound.play();
+      console.log("mreeow");
+      break;
+    }
   }
 });
+
 
 
 

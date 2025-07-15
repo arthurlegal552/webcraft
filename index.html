@@ -176,39 +176,35 @@ scene.add(particles);
     }
     animate();
 
-    const listener = new THREE.AudioListener();
-camera.add(listener); // Ouvinte ligado à câmera
+   let sound; // som global
 
-const sound = new THREE.Audio(listener);
-const audioLoader = new THREE.AudioLoader();
-audioLoader.load('assets/miau.mp3', function(buffer) {
-  sound.setBuffer(buffer);
-  sound.setLoop(false);
-  sound.setVolume(1.0);
-});
+const listener = new THREE.AudioListener();
+camera.add(listener);
 
-
-    window.addEventListener('mousemove', (event) => {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-});
-
+// Clique
 window.addEventListener('click', () => {
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(scene.children, true); // true para checar filhos também
+  const intersects = raycaster.intersectObjects(scene.children, true);
 
   for (const hit of intersects) {
-    if (kittyModel && kittyModel.children.includes(hit.object)) {
-      sound.play();
-      console.log("mreeow");
+    if (kittyModel && kittyModel.getObjectById(hit.object.id)) {
+      if (!sound) {
+        sound = new THREE.Audio(listener);
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load('assets/miau.mp3', function(buffer) {
+          sound.setBuffer(buffer);
+          sound.setLoop(false);
+          sound.setVolume(1.0);
+          sound.play(); // toca assim que carregar
+        });
+      } else {
+        sound.play(); // se já carregado, só toca
+      }
+      console.log("Miau!");
       break;
     }
   }
 });
-
-
-
-
     // Responsivo
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;

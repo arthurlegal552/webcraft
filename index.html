@@ -21,7 +21,7 @@
     import * as dat from 'https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.module.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-    const kittyurl = new URL('assets/kitty.fbx', import.meta.url);
+    const kittyurl = new URL('assets/kitty.glb', import.meta.url);
 
     // Cena e câmera
     const scene = new THREE.Scene();
@@ -99,7 +99,7 @@
 
     const assetLoader = new GLTFLoader();
 
-    assetLoader.load(kittyurl.href, function(gltf){
+    assetLoader.load(kittyurl.href, function(gltf) {
       const model = gltf.scene;
       scene.add(model);
       model.position.set(-12, 4, 10);

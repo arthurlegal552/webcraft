@@ -194,17 +194,19 @@ window.addEventListener('click', () => {
   for (const hit of intersects) {
     if (kittyModel && kittyModel.getObjectById(hit.object.id)) {
       if (!sound) {
-        sound = new THREE.Audio(listener);
-        const audioLoader = new THREE.AudioLoader();
-        audioLoader.load('assets/meowrgh.mp3', function(buffer) {
-          sound.setBuffer(buffer);
-          sound.setLoop(false);
-          sound.setVolume(1.0);
-          sound.play(); // toca assim que carregar
-        });
-      } else {
-        sound.play(); // se já carregado, só toca
-      }
+  sound = new THREE.Audio(listener);
+  const audioLoader = new THREE.AudioLoader();
+  audioLoader.load('assets/miau.mp3', function(buffer) {
+    sound.setBuffer(buffer);
+    sound.setLoop(false);
+    sound.setVolume(1.0);
+    // Somente toca se for interação de clique
+    sound.play();
+  });
+} else {
+  if (!sound.isPlaying) sound.play();
+}
+
       console.log("Miau!");
       break;
     }

@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <title>Three.js + OrbitControls (simples)</title>
+  <title>applecat editor</title>
 
   <!-- Import Map para definir onde buscar os módulos -->
   <script type="importmap">
@@ -19,6 +19,9 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import * as dat from 'https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.module.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    const kittyurl = URL('assets/kitty.fbx', import.meta.url);
 
     // Cena e câmera
     const scene = new THREE.Scene();
@@ -93,6 +96,16 @@
     scene.add(dLightShadowHelper)
     const textureLoader = new THREE.TextureLoader();
     scene.background = textureLoader.load('apcat.jpg');
+
+    const assetLoader = new GLTFLoader();
+
+    assetLoader.load(kittyurl.href, function(gltf){
+      const model = gltf.scene;
+      scene.add(model);
+      model.position.set(-12, 4, 10);
+    }, undefined, function(error){
+      console.error(error)
+    })
 
     const gui =  new dat.GUI();
 
